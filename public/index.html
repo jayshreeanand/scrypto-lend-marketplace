@@ -52,11 +52,11 @@
             </div>
           </div>
           <div class="hidden space-x-8 md:flex md:ml-10">
-            <a href="#" class="text-base font-medium text-white hover:text-gray-300">Peer Lend</a>
+            <a href="#product" class="text-base font-medium text-white hover:text-gray-300">Peer Lend</a>
 
-            <a href="#" class="text-base font-medium text-white hover:text-gray-300">Features</a>
+            <a href="#features" class="text-base font-medium text-white hover:text-gray-300">Features</a>
 
-            <a href="#" class="text-base font-medium text-white hover:text-gray-300">Marketplace</a>
+            <a href="#marketplace" class="text-base font-medium text-white hover:text-gray-300">Marketplace</a>
 
           </div>
         </div>
@@ -146,7 +146,7 @@
 </div>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div class="py-12 bg-white pt-20">
+<div class="py-12 bg-white pt-20" id="features">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="lg:text-center">
       <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">FEATURES</h2>
@@ -166,7 +166,7 @@
             </div>
             <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Decentralized marketplace</p>
           </dt>
-          <dd class="mt-2 ml-16 text-base text-gray-500">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</dd>
+          <dd class="mt-2 ml-16 text-base text-gray-500">Decentralized peer to peer lending marketplace provides numerous options for lenders and seekers alike</dd>
         </div>
 
         <div class="relative">
@@ -179,7 +179,7 @@
             </div>
             <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Customizable interest rates and collaterals</p>
           </dt>
-          <dd class="mt-2 ml-16 text-base text-gray-500">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</dd>
+          <dd class="mt-2 ml-16 text-base text-gray-500">You set your own interest rates, tenure and decide what works best for you</dd>
         </div>
 
         <div class="relative">
@@ -192,7 +192,7 @@
             </div>
             <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Withdraw funds instantly</p>
           </dt>
-          <dd class="mt-2 ml-16 text-base text-gray-500">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</dd>
+          <dd class="mt-2 ml-16 text-base text-gray-500">You can withdraw your loan amount as soon as its fulfilled</dd>
         </div>
 
         <div class="relative">
@@ -205,7 +205,7 @@
             </div>
             <p class="ml-16 text-lg leading-6 font-medium text-gray-900">No hidden costs</p>
           </dt>
-          <dd class="mt-2 ml-16 text-base text-gray-500">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</dd>
+          <dd class="mt-2 ml-16 text-base text-gray-500">Save on intermediary costs and get the best deal for your proposals</dd>
         </div>
       </dl>
     </div>
@@ -216,7 +216,7 @@
 
 <!-- form  -->
 
-<div class="py-20 pt-20 bg-white">
+<div class="py-20 pt-20 bg-white" id="product">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div class="lg:text-center">
@@ -224,8 +224,18 @@
       <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Create a lending request</p>
       <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Borrowers get to set their preferred interest rates and tenure. Lenders get to choose from various loan proposals in the marketplace </p>
     </div>
+
+   
   <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <div class="mb-4">
+    <div>
+      <p>Account Name:
+      <pre id="accountName"></pre>
+      </p>
+      <p>Account Address:
+      <pre id="accountAddress"></pre>
+      </p>
+    </div>
+    <div class="mb-4 pt-5">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="loan_amount">
         Loan Amount
       </label>
@@ -251,11 +261,27 @@
       </label>
       <input class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="collateral" type="password" placeholder="50%">
     </div>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center ">
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Submit
       </button>
-     
+
+      <button id="withdraw"class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 mx-5 rounded focus:outline-none focus:shadow-outline opacity-50 cursor-not-allowed" disabled type="button">
+        Withdraw fulfilled Loan
+      </button>
+    </div>
+    <div class="pt-10">
+      <input type="text" placeholder="Package address" id="packageAddress" />
+      <input type="text" placeholder="Symbol" id="flavor">
+      <div id="instantiateComponent"></div>
+    <p>Component Address: <span id="componentAddress"></span></p>
+    <p>Token address: <span id="gumAddress"></span></p>
+</div>
+  <!-- <p><button id="instantiateComponent">Instantiate component</button></p>
+  <div class="container">
+    <p>Component Address: <span id="componentAddress"></span></p>
+    <p>Token address: <span id="gumAddress"></span></p>
+  </div> -->
     </div>
   </form>
   <p class="text-center text-gray-500 text-xs">
@@ -267,22 +293,14 @@
 <!--  content -->
 
 
-
+<!-- 
 <div class="py-12 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div>
-    <p>Account Name:
-    <pre id="accountName"></pre>
-    </p>
-    <p>Account Address:
-    <pre id="accountAddress"></pre>
-    </p>
-  </div>
+
 
 
   <h2>2. Instantiate Loan proposal</h2>
-  <input type="text" placeholder="Package address" id="packageAddress" />
-  <input type="text" placeholder="Symbol" id="flavor">
+  
   <p><button id="instantiateComponent">Instantiate component</button></p>
   <div class="container">
     <p>Component Address: <span id="componentAddress"></span></p>
@@ -291,19 +309,18 @@
 
 
   <h2>3. Withdraw fulfiled loan</h2>
-  <p><button id="withdraw">Withdraw</button></p>
+ <p><button id="instantiateComponent">Instantiate component</button></p>
   <div class="container">
-    <p>Receipt:<br>
-    <pre id="receipt"></pre>
-    </p>
+    <p>Component Address: <span id="componentAddress"></span></p>
+    <p>Token address: <span id="gumAddress"></span></p>
   </div>
-  </div>
+  </div> -->
 
 
   <!-- items -->
 
   <!-- This example requires Tailwind CSS v2.0+ -->
-<div class="bg-white">
+<div class="bg-white" id="marketplace">
   <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="md:flex md:items-center md:justify-between">
       <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Open Loan proposals</h2>
