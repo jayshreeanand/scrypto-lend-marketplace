@@ -14,6 +14,8 @@ mod scryptlend {
         borrow_interest_rate: Decimal,
         /// min collateral ratio to be maintained
         min_collateral_ratio: Decimal,
+        //Loan tenure in months
+        time_period: Decimal,
     }
 
     impl Scryptlend {
@@ -23,6 +25,7 @@ mod scryptlend {
             borrow_interest_rate: Decimal,
             deposit_interest_rate: Decimal,
             min_collateral_ratio: Decimal,
+            time_period: Decimal,
         ) -> (ComponentAddress, Bucket) {
             //Creates loan seeker
             let seeker_badge: Bucket = ResourceBuilder::new_fungible()
@@ -48,6 +51,7 @@ mod scryptlend {
                 borrow_interest_rate: borrow_interest_rate,
                 deposit_interest_rate: deposit_interest_rate,
                 min_collateral_ratio: min_collateral_ratio,
+                time_period: time_period,
             }
             .instantiate();
 
