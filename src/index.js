@@ -93,7 +93,7 @@ document.getElementById('instantiateComponent').onclick = async function () {
   document.getElementById('gumAddress').innerText = resourceAddress;
 }
 
-document.getElementById('buyGumball').onclick = async function () {
+document.getElementById('withdraw').onclick = async function () {
 
   let manifest = new ManifestBuilder()
     .withdrawFromAccountByAmount(accountAddress, 10, "resource_tdx_b_1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8z96qp")
