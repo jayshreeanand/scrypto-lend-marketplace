@@ -1,51 +1,85 @@
 use scrypto::prelude::*;
+use std::collections::HashMap;
 
 #[blueprint]
-mod gumball_machine {
-    struct GumballMachine {
-        gumballs: Vault,
+mod scryptlend {
+    struct Scryptlend {
+        loan_name: String,
+        lenders: HashMap<String, Decimal>,
         collected_xrd: Vault,
-        price: Decimal,
-        // flavor: String,
+        loan_amount: Decimal,
+        /// The interest rate of deposits, per epoch
+        deposit_interest_rate: Decimal,
+        /// The (stable) interest rate of loans, per epoch
+        borrow_interest_rate: Decimal,
+        /// min collateral ratio to be maintained
+        min_collateral_ratio: Decimal,
     }
 
-    impl GumballMachine {
-        // given a price in XRD, creates a ready-to-use gumball machine
-        pub fn instantiate_gumball_machine(price: Decimal, flavor: String) -> ComponentAddress {
-            // create a new Gumball resource, with a fixed quantity of 100
-            let bucket_of_gumballs = ResourceBuilder::new_fungible()
-                .metadata("name", "Gumball")
-                .metadata("symbol", flavor)
-                .metadata("description", "A delicious gumball")
-                .mint_initial_supply(100);
+    impl Scryptlend {
+        pub fn new(
+            loan_amount: Decimal,
+            loan_name: String,
+            borrow_interest_rate: Decimal,
+            deposit_interest_rate: Decimal,
+            min_collateral_ratio: Decimal,
+        ) -> (ComponentAddress, Bucket) {
+            //Creates loan seeker
+            let seeker_badge: Bucket = ResourceBuilder::new_fungible()
+                .metadata("name", "Loan Seeker Badge")
+                .metadata("symbol", "LSeeker")
+                .divisibility(DIVISIBILITY_NONE)
+                .mint_initial_supply(1);
 
-            // populate a GumballMachine struct and instantiate a new component
-            Self {
-                gumballs: Vault::with_bucket(bucket_of_gumballs),
+            //seeker has access to "withdraw" the funds
+            let access_rules: AccessRules = AccessRules::new()
+                .method(
+                    "withdraw",
+                    rule!(require(seeker_badge.resource_address())),
+                    LOCKED,
+                )
+                .default(rule!(allow_all), LOCKED);
+
+            let mut loan_component: ScryptlendComponent = Self {
+                loan_name: loan_name,
+                lenders: HashMap::default(),
                 collected_xrd: Vault::new(RADIX_TOKEN),
-                price: price,
-                // flavor: flavor,
+                loan_amount: loan_amount,
+                borrow_interest_rate: borrow_interest_rate,
+                deposit_interest_rate: deposit_interest_rate,
+                min_collateral_ratio: min_collateral_ratio,
             }
-            .instantiate()
-            .globalize()
+            .instantiate();
+
+            loan_component.add_access_check(access_rules);
+            let loan_component_address: ComponentAddress = loan_component.globalize();
+            return (loan_component_address, seeker_badge);
         }
 
-        pub fn get_price(&self) -> Decimal {
-            self.price
+        pub fn lend(&mut self, funds: Bucket, lender: String) -> Decimal {
+            let new_loan_amount = funds.amount();
+            self.collected_xrd.put(funds);
+            self.lenders.insert(lender, new_loan_amount);
+            self.collected_xrd.amount()
         }
 
-        pub fn buy_gumball(&mut self, mut payment: Bucket) -> (Bucket, Bucket) {
-            // take our price in XRD out of the payment
-            // if the caller has sent too few, or sent something other than XRD, they'll get a runtime error
-            let our_share = payment.take(self.price);
-            self.collected_xrd.put(our_share);
+        pub fn withdraw(&mut self) -> Bucket {
+            if self.collected_xrd.amount() >= self.loan_amount {
+                self.collected_xrd.take_all()
+            } else {
+                error!("LOAN AMOUNT NOT MET");
+                self.collected_xrd.take(0)
+            }
+        }
 
-            // we could have simplified the above into a single line, like so:
-            // self.collected_xrd.put(payment.take(self.price));
+        /// Returns the deposit interest rate per epoch
+        pub fn set_deposit_interest_rate(&mut self, rate: Decimal) {
+            self.deposit_interest_rate = rate;
+        }
 
-            // return a tuple containing a gumball, plus whatever change is left on the input payment (if any)
-            // if we're out of gumballs to give, we'll see a runtime error when we try to grab one
-            (self.gumballs.take(1), payment)
+        /// Returns the borrow interest rate per epoch
+        pub fn set_borrow_interest_rate(&mut self, rate: Decimal) {
+            self.borrow_interest_rate = rate;
         }
     }
 }
