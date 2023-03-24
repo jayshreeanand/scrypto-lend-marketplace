@@ -37,3 +37,32 @@ This project is build using Scrypto and [Radix dApp Toolkit](https://github.com/
 8. Your wallet will again open up. Click on "sign transaction". You should now see the instantiated component address and resource address on the page.
 9. Fill in the loan details and submit proposal by clicking on "Submit proposal"
 10. Your wallet will open up. Click on "sign transaction". The transaction receipt will get displayed on the page.
+
+## Screenshots
+
+<img width="1654" alt="1" src="https://user-images.githubusercontent.com/5363211/227626500-537be6c5-a81b-4de1-9eeb-771396d15970.png">
+
+<img width="1680" alt="2" src="https://user-images.githubusercontent.com/5363211/227626514-ddb7bafa-8281-4d63-aabe-db12e785e614.png">
+
+
+![3](https://user-images.githubusercontent.com/5363211/227626530-6ed8f296-13a0-4866-916a-e583520046a6.jpeg)
+
+
+![4](https://user-images.githubusercontent.com/5363211/227626573-2ac5f9f6-5abe-4c1c-a425-8d9432f11d66.jpeg)
+
+<img width="1636" alt="5" src="https://user-images.githubusercontent.com/5363211/227626607-44d1187d-03f3-4144-a39a-8932bb00971d.png">
+
+<img width="1573" alt="6" src="https://user-images.githubusercontent.com/5363211/227626622-fe0b0e4e-79a1-4786-996f-2bf03674b434.png">
+
+<img width="1413" alt="7" src="https://user-images.githubusercontent.com/5363211/227626636-c346104d-a342-43b5-8e88-e8c12755fb6f.png">
+
+
+<img width="1382" alt="8" src="https://user-images.githubusercontent.com/5363211/227626664-581b5b49-0d8d-4805-9fee-2eec66874573.png">
+
+
+
+
+
+
+
+
