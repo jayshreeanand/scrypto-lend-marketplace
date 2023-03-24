@@ -9,7 +9,7 @@ import {
 const dAppId = 'account_tdx_22_1prd6gfrqj0avlyxwldgyza09fp7gn4vjmga7clhe9p2qv0qt58'
 
 const rdt = RadixDappToolkit(
-  { dAppDefinitionAddress: dAppId, dAppName: 'GumballMachine' },
+  { dAppDefinitionAddress: dAppId, dAppName: 'PeerLend' },
   (requestData) => {
     requestData({
       accounts: { quantifier: 'atLeast', quantity: 1 },
@@ -38,8 +38,8 @@ const streamApi = new StreamApi();
 
 // Global states
 let accountAddress //: string // User account address
-let componentAddress //: string  // GumballMachine component address
-let resourceAddress //: string // GUM resource address
+let componentAddress //: string  //  component address
+let resourceAddress //: string //  resource address
 // You can use this packageAddress to skip the dashboard publishing step package_tdx_b_1qxtzcuyh8jmcp9khn72k0gs4fp8gjqaz9a8jsmcwmh9qhax345
 let xrdAddress = "resource_tdx_b_1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8z96qp"
 
@@ -50,7 +50,7 @@ document.getElementById('instantiateComponent').onclick = async function () {
 
   let manifest = new ManifestBuilder()
     .callMethod(accountAddress, "create_proof", [ResourceAddress("resource_tdx_b_1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8z96qp")])
-    .callFunction(packageAddress, "GumballMachine", "instantiate_gumball_machine", [Decimal("10"), `"${flavor}"`])
+    .callFunction(packageAddress, "package", "new", [Decimal("10"), `"${flavor}"`])
     .build()
     .toString();
   console.log("Instantiate Manifest: ", manifest)
@@ -90,7 +90,7 @@ document.getElementById('instantiateComponent').onclick = async function () {
   document.getElementById('componentAddress').innerText = componentAddress;
 
   resourceAddress = commitReceipt.details.referenced_global_entities[1]
-  document.getElementById('gumAddress').innerText = resourceAddress;
+  document.getElementById('address').innerText = resourceAddress;
 }
 
 document.getElementById('withdraw').onclick = async function () {
@@ -98,12 +98,12 @@ document.getElementById('withdraw').onclick = async function () {
   let manifest = new ManifestBuilder()
     .withdrawFromAccountByAmount(accountAddress, 10, "resource_tdx_b_1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8z96qp")
     .takeFromWorktopByAmount(10, "resource_tdx_b_1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8z96qp", "xrd_bucket")
-    .callMethod(componentAddress, "buy_gumball", [Bucket("xrd_bucket")])
-    .callMethod(accountAddress, "deposit_batch", [Expression("ENTIRE_WORKTOP")])
+    .callMethod(componentAddress, "buy", [Bucket("xrd_bucket")])
+    .callMethod(accountAddress, "deposit", [Expression("ENTIRE_WORKTOP")])
     .build()
     .toString();
 
-  console.log('buy_gumball manifest: ', manifest)
+  console.log(' manifest: ', manifest)
 
   // Send manifest to extension for signing
   const result = await rdt
@@ -114,7 +114,7 @@ document.getElementById('withdraw').onclick = async function () {
 
   if (result.isErr()) throw result.error
 
-  console.log("Buy Gumball getMethods Result: ", result)
+  console.log("getMethods Result: ", result)
 
   // Fetch the transaction status from the Gateway SDK
   let status = await transactionApi.transactionStatus({
@@ -122,7 +122,7 @@ document.getElementById('withdraw').onclick = async function () {
       intent_hash_hex: result.value.transactionIntentHash
     }
   });
-  console.log('Buy Gumball TransactionAPI transaction/status: ', status)
+  console.log('TransactionAPI transaction/status: ', status)
 
   // fetch commit reciept from gateway api 
   let commitReceipt = await transactionApi.transactionCommittedDetails({
@@ -133,7 +133,7 @@ document.getElementById('withdraw').onclick = async function () {
       }
     }
   })
-  console.log('Buy Gumball Committed Details Receipt', commitReceipt)
+  console.log('Committed Details Receipt', commitReceipt)
 
   // Show the receipt on the DOM
   document.getElementById('receipt').innerText = JSON.stringify(commitReceipt.details.receipt, null, 2);
